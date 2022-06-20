@@ -67,7 +67,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError({
-                'ingredients': 'Добавьте хотя бы один рецепт'})
+                'ingredients': 'Добавьте хотя бы один ингредиент'})
         ingredient_list = []
         for ingredient_item in ingredients:
             ingredient = get_object_or_404(
@@ -76,7 +76,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             )
             if ingredient in ingredient_list:
                 raise serializers.ValidationError(
-                    'Ингридиенты должны быть уникальными'
+                    'Ингредиенты должны быть уникальными'
                 )
             ingredient_list.append(ingredient)
             if int(ingredient_item['amount']) < 0:
@@ -88,57 +88,52 @@ class RecipeSerializer(serializers.ModelSerializer):
         data['ingredients'] = ingredients
         return data
 
-    def create(self, validated_data):
-        ingredients = validated_data.pop('ingredients')
-        tags = validated_data.pop('tags')
-        recipe = Recipe.objects.create(**validated_data)
-        recipe.save()
-        for tag in tags:
-            new_tag = Tag.objects.get(id=tag.id)
+    def tag_create(self, tags_data, recipe):
+        for tag in tags_data:
+            new_tag = get_object_or_404(Tag, id=tag.id)
             recipe.tags.add(new_tag)
-        for ingredient in ingredients:
+
+    def ingredient_create(self, ingredients_data, recipe):
+        for ingredient in ingredients_data:
             new_ingredient = IngredientAmount.objects.create(
                 ingredient_id=ingredient['id'],
                 recipe_id=recipe.id,
                 amount=ingredient['amount']
             )
             recipe.ingredients.add(new_ingredient.ingredient_id)
+
+    def create(self, validated_data):
+        ingredients_data = validated_data.pop('ingredients')
+        tags_data = validated_data.pop('tags')
+        recipe = Recipe.objects.create(**validated_data)
+        recipe.save()
+        self.tag_create(tags_data=tags_data, recipe=recipe)
+        self.ingredient_create(
+            ingredients_data=ingredients_data,
+            recipe=recipe
+        )
         return recipe
 
     def update(self, instance, validated_data):
         tags_data = validated_data.pop('tags')
         ingredients_data = validated_data.pop('ingredients')
         tags = list(instance.tags.all())
-        ingredients = list(instance.ingredients.all())
         if len(tags) > 0:
-            for tag in tags:
-                get_object_or_404(
-                    RecipeTag,
-                    recipe=instance,
-                    tag=tag
-                ).delete()
-        for tag in tags_data:
-            new_tag = Tag.objects.get(id=tag.id)
-            instance.tags.add(new_tag)
-        for ingredient in ingredients:
-            print(ingredient)
-            get_object_or_404(
-                IngredientAmount,
-                ingredient=ingredient,
-                recipe=instance,
-            ).delete()
-        for ingredient in ingredients_data:
-            new_ingredient = IngredientAmount.objects.create(
-                ingredient_id=ingredient['id'],
-                recipe_id=instance.id,
-                amount=ingredient['amount']
-            )
-            instance.ingredients.add(new_ingredient.ingredient_id)
+            RecipeTag.objects.filter(recipe=instance).delete()
+        self.tag_create(tags_data=tags_data, recipe=instance)
+        IngredientAmount.objects.filter(recipe=instance).delete()
+        self.ingredient_create(
+            ingredients_data=ingredients_data,
+            recipe=instance
+        )
         return super(RecipeSerializer, self).update(instance, validated_data)
 
     def to_representation(self, instance):
         data = super(RecipeSerializer, self).to_representation(instance)
-        data['tags'] = TagSerializer(instance=instance.tags, many=True).data
+        data['tags'] = TagSerializer(
+            instance=instance.tags,
+            many=True
+        ).data
         return data
 
     def get_ingredients(self, value):

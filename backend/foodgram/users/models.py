@@ -54,9 +54,6 @@ class User(AbstractUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'password']
 
-    def __str__(self):
-        return self.username
-
     class Meta:
         constraints = [models.UniqueConstraint(
             fields=['username', 'email'],
@@ -65,3 +62,6 @@ class User(AbstractUser):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
         ordering = ['username']
+
+    def __str__(self):
+        return self.username

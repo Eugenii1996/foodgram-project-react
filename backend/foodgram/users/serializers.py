@@ -59,7 +59,6 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         read_only_fields = ('__all__',)
 
     def to_representation(self, instance):
-        print(instance)
         recipes = RecipeSubscriptionSerializer(
             instance=instance.recipes,
             many=True
