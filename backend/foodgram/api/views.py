@@ -12,7 +12,7 @@ from .paginations import PageLimitPagination
 from .permissions import DeletePatchPutIsOwner
 from .serializers import (
     FavoriteSerializer, IngredientSerializer,
-    RecipeSerializer, TagSerializer
+    RecipeSerializer, RecipeListSerializer, TagSerializer
 )
 from recipes.models import (
     Ingredient, IngredientAmount, Tag, Recipe, Favorite, ShoppingCart
@@ -52,7 +52,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return RecipeSerializer
+            return RecipeListSerializer
         return RecipeSerializer
 
     def perform_create(self, serializer):

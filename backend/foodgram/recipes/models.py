@@ -80,11 +80,7 @@ class Recipe(models.Model):
         through='IngredientAmount',
         through_fields=('recipe', 'ingredient'),
     )
-    tags = models.ManyToManyField(
-        Tag,
-        through='RecipeTag',
-        through_fields=('recipe', 'tag'),
-    )
+    tags = models.ManyToManyField(Tag)
     cooking_time = models.IntegerField(
         verbose_name='Время приготовления',
         validators=[MinValueValidator(1)],
@@ -124,29 +120,6 @@ class IngredientAmount(models.Model):
         ]
         verbose_name = 'Ингредиент-Рецепт'
         verbose_name_plural = 'Ингредиенты-Рецепты'
-
-
-class RecipeTag(models.Model):
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        related_name='recipetags'
-    )
-    tag = models.ForeignKey(
-        Tag,
-        on_delete=models.CASCADE,
-        related_name='recipetags'
-    )
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['recipe', 'tag'],
-                name='unique_recipe_tag'
-            )
-        ]
-        verbose_name = 'Тег-Рецепт'
-        verbose_name_plural = 'Теги-Рецепты'
 
 
 class ShoppingCart(models.Model):
