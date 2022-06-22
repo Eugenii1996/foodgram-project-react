@@ -94,7 +94,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         ])
 
     def create(self, validated_data):
-        print(validated_data)
         validated_data.pop('ingredients', {})
         ingredients = validated_data.pop('ingredientsamount', {})
         tags = validated_data.pop('tags')
