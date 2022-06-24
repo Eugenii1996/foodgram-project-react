@@ -7,9 +7,9 @@ from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .filters import RecipeFilter
+from .filters import IngredientFilter, RecipeFilter
 from .paginations import PageLimitPagination
-from .permissions import DeletePatchPutIsOwner
+from .permissions import DeletePatchPutOrReadOnly
 from .serializers import (
     FavoriteSerializer, IngredientSerializer,
     RecipeSerializer, RecipeListSerializer, TagSerializer
@@ -28,7 +28,7 @@ SHOPPING_LIST_FILE_NAME = 'Список покупок'
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (IngredientFilter,)
     search_fields = ('^name',)
 
 
@@ -41,11 +41,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     pagination_class = PageLimitPagination
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        DeletePatchPutIsOwner
-    )
-    filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
+    permission_classes = (DeletePatchPutOrReadOnly,)
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filterset_class = RecipeFilter
     ordering_fields = ('id',)
     ordering = ('-id',)
@@ -72,9 +69,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 user=request.user, recipes=recipe
             ).exists()
             if if_already_exists:
-                return Response({
-                    'errors': error_message
-                    }, status=status.HTTP_400_BAD_REQUEST
+                return Response(
+                    {'errors': error_message},
+                    status=status.HTTP_400_BAD_REQUEST
                 )
             used_model.objects.create(user=request.user, recipes=recipe)
             serializer = used_serializer(

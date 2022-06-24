@@ -1,43 +1,29 @@
-from csv import DictReader
+import csv
+from itertools import islice
 from django.core.management import BaseCommand
 
-from ...models import Ingredient, Tag
-
-
-ALREDY_LOADED_ERROR_MESSAGE = """
-Если вам нужно заново загрузить данные из CSV файла,
-сначала удалите файл db.sqlite3 для очистки базы данных.
-Затем выполните команду `python manage.py migrate` для создания новой
-пустой базы данных"""
+from ...models import Ingredient
 
 
 class Command(BaseCommand):
 
-    def handle(self, *args, **options):
+    help = 'Импорт баз данных из csv в БД.'
 
-        # Показать это сообщение,
-        # если данные об ингредиенте уже есть в базе данных
-        if Ingredient.objects.exists():
-            print('Данные об ингредиенте уже существуют.')
-            print(ALREDY_LOADED_ERROR_MESSAGE)
-            return
+    def handle(self, *args, **kwargs):
+        try:
+            with open(
+                'static/data/ingredients.csv',
+                'r',
+                encoding='utf-8',
+                newline=''
+            ) as f:
+                reader = csv.reader(f)
+                for row in islice(reader, 0, None):
+                    _, created = Ingredient.objects.get_or_create(
+                        name=row[0],
+                        measurement_unit=row[1],)
+            self.stdout.write(
+                self.style.SUCCESS(u'Импорт ingredients.csv завершён!'))
 
-        # Показать это сообщение перед началом загрузки данных
-        print("Загрузка информации об ингредиентах")
-
-        # Загрузка ингредиентов
-        for row in DictReader(open('../../data/ingredients.csv')):
-            ingredient = Ingredient(
-                name=row['Name'],
-                measurement_unit=row['Measurement_unit']
-            )
-            ingredient.save()
-
-        # Загрузка тегов
-        for row in DictReader(open('../../data/tags.csv')):
-            ingredient = Tag(
-                name=row['Name'],
-                color=row['Color'],
-                slug=row['Slug']
-            )
-            ingredient.save()
+        except Exception as error:
+            self.stdout.write(self.style.WARNING(error))

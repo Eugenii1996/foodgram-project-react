@@ -57,10 +57,10 @@ class UserViewSet(DjoserUserViewSet):
                 author=author
             ).exists()
             if if_already_exists or request.user == author:
-                return Response({
-                    'errors': ('Вы уже подписаны или пытаетесь '
-                               'подписаться на самого себя')
-                    }, status=status.HTTP_400_BAD_REQUEST
+                return Response(
+                    {'errors': ('Вы уже подписаны или пытаетесь '
+                                'подписаться на самого себя')},
+                    status=status.HTTP_400_BAD_REQUEST
                 )
             Follow.objects.create(user=request.user, author=author)
             serializer = SubscriptionSerializer(
