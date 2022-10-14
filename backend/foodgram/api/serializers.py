@@ -117,7 +117,6 @@ class RecipeSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super(
             RecipeSerializer, self).to_representation(instance)
-        print(instance)
         data['tags'] = TagSerializer(
             instance.tags, many=True, required=False).data
         return data

@@ -10,21 +10,14 @@
 Предоставляет клиентам доступ к базе данных.
 Данные передаются в формате JSON.
 В реализации проекта применена архитектура REST API.
-Примененные библиотеки:
- - requests 2.26.0
- - asgiref 3.2.10
- - Django 2.2.16
- - django-filter 2.4.0
- - djangorestframework 3.12.4
- - djangorestframework_simplejwt 5.1.0
- - gunicorn 20.0.4
- - psycopg2-binary 2.8.6
- - PyJWT 2.1.0
- - pytz 2020.1
- - sqlparse 0.3.1
- - pytest 6.2.4
- - pytest-django 4.4.0
- - pytest-pythonpath 0.7.3
+Стек технологий:
+ - Python 3
+ - Django REST Framework
+ - Docker
+ - Gunicorn
+ - PostgreSQL
+ - Git
+ - Pytest
 
 ### Установка Docker на Windows:
 
@@ -83,7 +76,7 @@ docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python manage.py collectstatic --no-input 
 ```
 
-### Ссылка на развернутый и запущенный проект:
+### Ссылка на развернутый и запущенный проект (В настоящий момент недоступен)):
 
 http://foodgram.ddnsking.com/ или http://84.252.137.237/
 
