@@ -21,8 +21,8 @@
 
 ### Установка Docker на Windows:
 
-Установите подсистему Linux (WSL2) следуя [инструкции](https://docs.microsoft.com/ru-ru/windows/wsl/install)
-Установочный файл можно скачать с [официального сайта](https://www.docker.com/products/docker-desktop/)
+Установите подсистему Linux (WSL2) следуя [инструкции](https://docs.microsoft.com/ru-ru/windows/wsl/install).
+Установочный файл можно скачать с [официального сайта](https://www.docker.com/products/docker-desktop/).
 
 ### Клонировать репозиторий c GitHub:
 
@@ -93,5 +93,5 @@ password: admin
 Из дериктории с файлом manage.py выполнить команду:
 
 ```bash
-ocker-compose exec web python manage.py fill_db_from_csv_files
+docker-compose exec web python manage.py fill_db_from_csv_files
 ```
