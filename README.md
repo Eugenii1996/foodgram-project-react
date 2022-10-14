@@ -100,5 +100,5 @@ password: admin
 Из дериктории с файлом manage.py выполнить команду:
 
 ```bash
-ocker-compose exec web python manage.py fill_db_from_csv_files
+docker-compose exec web python manage.py fill_db_from_csv_files
 ```
