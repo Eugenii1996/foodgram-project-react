@@ -28,8 +28,8 @@
 
 ### Установка Docker на Windows:
 
-Установите подсистему Linux (WSL2) следуя [инструкции](https://docs.microsoft.com/ru-ru/windows/wsl/install)
-Установочный файл можно скачать с [официального сайта](https://www.docker.com/products/docker-desktop/)
+Установите подсистему Linux (WSL2) следуя [инструкции](https://docs.microsoft.com/ru-ru/windows/wsl/install).
+Установочный файл можно скачать с [официального сайта](https://www.docker.com/products/docker-desktop/).
 
 ### Клонировать репозиторий c GitHub:
 
