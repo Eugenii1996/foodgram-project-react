@@ -6,11 +6,9 @@
 
 ### О проекте:
 
-Проект Foodgram представляет собой сервис для публикации рецептов приготовления различных блюд и дальнейшего их использования.
-Предоставляет клиентам доступ к базе данных.
-Данные передаются в формате JSON.
-В реализации проекта применена архитектура REST API.
-Стек технологий:
+Проект Foodgram представляет собой онлайн-сервис и API для него. На этом сервисе пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
+
+Примененные технологии:
  - Python 3
  - Django REST Framework
  - Docker
@@ -28,6 +26,40 @@
 
 ```bash
 git clone git@github.com:Eugenii1996/foodgram-project-react.git
+```
+
+```bash
+cd api_yamdb
+```
+
+### Cоздать и активировать виртуальное окружение:
+
+Виртуальное окружение должно использовать Python 3.7
+
+```bash
+pyhton -m venv venv
+```
+
+* Если у вас Linux/MacOS
+
+    ```bash
+    source venv/bin/activate
+    ```
+
+* Если у вас windows
+
+    ```bash
+    source venv/scripts/activate
+    ```
+
+### Установка зависимостей из файла requirements.txt:
+
+```bash
+python -m pip install --upgrade pip
+```
+
+```bash
+pip install -r requirements.txt
 ```
 
 ### Шаблон наполнения env-файла:
@@ -76,22 +108,10 @@ docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python manage.py collectstatic --no-input 
 ```
 
-### Ссылка на развернутый и запущенный проект (В настоящий момент недоступен)):
-
-http://foodgram.ddnsking.com/ или http://84.252.137.237/
-
-Данные для входа админа:
-
-```
-username: admin,
-email: admin@yandex.ru,
-password: admin
-```
-
 ### Как наполнить базу данных:
 
 Из дериктории с файлом manage.py выполнить команду:
 
 ```bash
-ocker-compose exec web python manage.py fill_db_from_csv_files
+docker-compose exec web python manage.py fill_db_from_csv_files
 ```
